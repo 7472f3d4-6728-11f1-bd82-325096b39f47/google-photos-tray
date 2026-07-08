@@ -56,10 +56,6 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install_startup.ps1 -U
 | `photos_tray_hidden.vbs` | コンソール窓を出さずに本体を起動するランチャー |
 | `install_startup.ps1` | スタートアップ登録 / 解除（`-Uninstall`） |
 
-## 関連プロジェクト
-
-- [chrome-minimized](https://github.com/7472f3d4-6728-11f1-bd82-325096b39f47/chrome-minimized) — Chrome を最小化状態で起動するだけの汎用ランチャー（Google フォト固有の機能はありません）
-
 ## メモ
 
 - アイコンは Chrome の実行ファイルから取得しています（見た目は Chrome アイコン）。
