@@ -1,65 +1,69 @@
-# Google フォト — タスクトレイ常駐
+# Google Photos — Tray Launcher
 
-Google フォトの Web アプリ（PWA）を **Windows のタスクトレイ（通知領域）に常駐**させ、
-**PC 起動時に自動起動**するための一式です。外部ツールは不要で、Windows 標準の
-PowerShell + .NET（NotifyIcon）だけで動きます。
+[日本語](README.ja.md)
 
-## なぜ常駐させるのか
+A small toolkit that keeps the Google Photos web app (PWA) **pinned in the
+Windows system tray** and **auto-starts it at login**. No external tools
+required — it runs entirely on standard Windows PowerShell + .NET (NotifyIcon).
 
-**パソコン版 Google ドライブの「Google フォトへのバックアップ」機能が 2026/8/10 で終了**したため
-（2026/6/15 以降は新規フォルダ追加も不可）、その代替として **Google フォト Web アプリ側の
-「フォルダをバックアップ」機能**で自動アップロードを続けるのが公式の推奨です。
-この機能は **Web アプリが起動している間だけ**動くので、PC 起動時から常にトレイで動かし続けることで
-「フォルダに写真を置けば自動で Google フォトへ上がる」状態を維持します。
+## Why keep it running in the tray
 
-## 仕組み
+Since the **desktop Google Drive app's "back up to Google Photos" feature is
+being discontinued on 2026-08-10** (and no new folders could be added to it
+after 2026-06-15), Google's recommended replacement is the **"Back up a
+folder" feature in the Google Photos web app itself**. That feature only
+works **while the web app is running**, so keeping it alive in the tray from
+login onward keeps "drop photos in a folder and they auto-upload to Google
+Photos" working continuously.
 
-- 専用プロファイルで Chrome を「アプリ表示（`--app`）」で起動 → ウィンドウ管理が確実。
-- 起動時はウィンドウを隠してトレイアイコンだけ表示。
-- **トレイアイコン**: 左クリックで表示/非表示の切り替え。右クリックで「表示/非表示・開き直す・終了」。
+## How it works
 
-## 使い方
+- Launches Chrome in "app mode" (`--app`) under a dedicated profile, for reliable window management.
+- On startup, the window is hidden and only the tray icon is shown.
+- **Tray icon**: left-click toggles show/hide. Right-click gives "Show/Hide, Reopen, Quit".
 
-### 初回セットアップ（1 回だけ）
+## Usage
 
-1. `photos_tray_hidden.vbs` をダブルクリック。
-2. 専用プロファイルのため、開いたウィンドウで **Google アカウントにログイン**。
-3. Google フォトの **設定 →「フォルダをバックアップ」** で、自動アップロードしたい
-   PC 内のフォルダを指定する（＝ 旧 Google ドライブのバックアップの代わり）。
-4. 設定できたら、**トレイアイコンを左クリックで非表示**にして OK。以後はトレイで動き続けます。
+### First-time setup (one time only)
 
-> 2 回目以降は、起動するとウィンドウを出さずトレイのみで静かに常駐します。
-> バックアップ状況を見たいときはトレイアイコンを左クリックで表示できます。
+1. Double-click `photos_tray_hidden.vbs`.
+2. Since it uses a dedicated profile, **sign in to your Google account** in the window that opens.
+3. In Google Photos, go to **Settings → "Back up a folder"** and choose the
+   folder(s) on your PC you want auto-uploaded (this replaces the old Google Drive backup feature).
+4. Once set up, **left-click the tray icon to hide the window** — it will keep running in the tray from then on.
 
-### PC 起動時に自動起動する
+> From the second launch onward, the app starts quietly into the tray without showing a window.
+> Left-click the tray icon any time you want to check backup status.
 
-PowerShell で次を実行（管理者権限は不要）:
+### Auto-start at login
+
+Run the following in PowerShell (no admin rights needed):
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install_startup.ps1
 ```
 
-スタートアップに次のショートカットが作られます:
+This creates a shortcut in Startup:
 `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\Google Photos Tray.lnk`
 
-### 自動起動を解除する
+### Removing auto-start
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install_startup.ps1 -Uninstall
 ```
 
-## ファイル
+## Files
 
-| ファイル | 役割 |
+| File | Role |
 |---|---|
-| `photos_tray.ps1` | 本体（Chrome 起動 + トレイアイコン管理） |
-| `photos_tray_hidden.vbs` | コンソール窓を出さずに本体を起動するランチャー |
-| `install_startup.ps1` | スタートアップ登録 / 解除（`-Uninstall`） |
+| `photos_tray.ps1` | Main script (launches Chrome + manages the tray icon) |
+| `photos_tray_hidden.vbs` | Launcher that starts the main script without showing a console window |
+| `install_startup.ps1` | Registers / removes the startup entry (`-Uninstall`) |
 
-## メモ
+## Notes
 
-- アイコンは Chrome の実行ファイルから取得しています（見た目は Chrome アイコン）。
-  Google フォトらしい見た目にしたい場合は `photos_tray.ps1` の `ExtractAssociatedIcon`
-  の箇所を `.ico` 指定に変えれば差し替え可能です。
-- 別アカウント / 別 URL にしたい場合は `photos_tray.ps1` の `-Url` 既定値を変更してください。
-- 専用プロファイルは `%LOCALAPPDATA%\GooglePhotosTray\profile` に作られます。
+- The icon is taken from the Chrome executable (so it looks like the Chrome
+  icon). If you want a Google Photos–style icon instead, change the
+  `ExtractAssociatedIcon` part of `photos_tray.ps1` to point to an `.ico` file.
+- To use a different account or URL, change the default value of `-Url` in `photos_tray.ps1`.
+- The dedicated profile is created at `%LOCALAPPDATA%\GooglePhotosTray\profile`.
