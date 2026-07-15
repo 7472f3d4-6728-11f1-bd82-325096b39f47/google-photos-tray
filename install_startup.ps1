@@ -25,8 +25,8 @@ $sc.TargetPath       = "$env:SystemRoot\System32\wscript.exe"
 $sc.Arguments        = "`"$vbs`""
 $sc.WorkingDirectory = $scriptDir
 $sc.WindowStyle      = 7        # 最小化
-$sc.Description      = "Google フォトをタスクトレイに常駐起動"
+$sc.Description      = "Launch Google Photos in the system tray at startup"
 $sc.Save()
 
 Write-Host "installed: $lnk"
-Write-Host "→ 次回 PC 起動時から自動でトレイに常駐します。今すぐ試すには photos_tray_hidden.vbs を実行してください。"
+Write-Host "-> Will start in the tray automatically on the next PC startup. To try it now, run photos_tray_hidden.vbs."

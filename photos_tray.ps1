@@ -144,19 +144,19 @@ catch { $icon = [System.Drawing.SystemIcons]::Application }
 
 $ni = New-Object System.Windows.Forms.NotifyIcon
 $ni.Icon = $icon
-$ni.Text = "Google フォト"
+$ni.Text = "Google Photos"
 $ni.Visible = $true
 
 if ($firstRun) {
-    $ni.BalloonTipTitle = "Google フォト 常駐を開始しました"
-    $ni.BalloonTipText  = "開いたウィンドウでログインし、設定 →「フォルダをバックアップ」で対象フォルダを指定してください。設定後はトレイアイコンの左クリックで表示/非表示できます。"
+    $ni.BalloonTipTitle = "Google Photos tray started"
+    $ni.BalloonTipText  = "Sign in on the window that opened, then go to Settings -> `"Back up folder`" to choose a folder to back up. After that, use the tray icon's left click to show/hide the window."
     $ni.ShowBalloonTip(15000)
 }
 
 $menu     = New-Object System.Windows.Forms.ContextMenuStrip
-$miToggle = $menu.Items.Add("表示 / 非表示")
-$miReopen = $menu.Items.Add("開き直す")
-$miExit   = $menu.Items.Add("終了")
+$miToggle = $menu.Items.Add("Show / Hide")
+$miReopen = $menu.Items.Add("Reopen")
+$miExit   = $menu.Items.Add("Exit")
 $ni.ContextMenuStrip = $menu
 
 $ni.add_MouseClick({
